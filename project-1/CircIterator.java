@@ -56,7 +56,7 @@ public class CircIterator<E> implements Iterator<E>{
 		previous = null;
 		}
 		else {
-		previous.setNext(next.getNext());
+		previous.setNext(next);
 		nextCalled = false;
 		}
 	}
