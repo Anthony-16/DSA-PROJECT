@@ -2,10 +2,10 @@
 // Node.java
 // A general node for a singly linked list of objects.
 //****************************************************************
-public class Node
+public class Node<E>
 {
-    private Node next;
-    private Object element;
+    private Node<E> next;
+    private E data;
     
     //-------------------------------------------
     // Creates an empty node.
@@ -13,22 +13,22 @@ public class Node
     public Node()
     {
 	next = null;
-	element = null;
+	data = null;
     }
 
     //---------------------------------------------
     // Creates a node storing a specified element.
     //---------------------------------------------
-    public Node(Object element)
+    public Node(E element)
     {
 	next = null;
-	this.element = element;
+	this.data = element;
     }
 
     //---------------------------------------------
     // Returns the node that follows this one.
     //---------------------------------------------
-    public Node getNext()
+    public Node<E> getNext()
     {
 	return next;
     }
@@ -36,7 +36,7 @@ public class Node
     //---------------------------------------------
     // Sets the node that follows this one.
     //---------------------------------------------
-    public void setNext(Node node)
+    public void setNext(Node<E> node)
     {
 	next = node;
     }
@@ -44,17 +44,17 @@ public class Node
     //---------------------------------------------
     // Returns the element stored in this node.
     //---------------------------------------------
-    public Object getElement()
+    public E getElement()
     {
-	return element;
+	return data;
 
     }
 
     //--------------------------------------------
     // Sets the element stored in this node.
     //--------------------------------------------
-    public void setElement(Object element)
+    public void setElement(E element)
     {
-	this.element = element;
+	this.data = element;
     }
 }
