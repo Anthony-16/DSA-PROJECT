@@ -50,17 +50,19 @@ public class CircIterator<E> implements Iterator<E>{
 		if (!nextCalled) {
 			return;
 		}
-		if (next == previous) {
-		nextCalled = false;
+		if (previous.getNext() == next && next == previous) {  // if there is one item in list
 		next = null;
 		previous = null;
+		}
+		else if (previous.getNext() == next && next != previous) { // if there are two items in the list
+			next.setNext(next);
+			nextCalled = false;
 		}
 		else {
 		previous.setNext(next);
 		nextCalled = false;
 		}
 	}
-	
 	
 	
 }
