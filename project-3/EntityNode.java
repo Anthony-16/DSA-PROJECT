@@ -1,9 +1,29 @@
+import java.util.ArrayList;
+import java.util.List;
 
-public class Main {
+public class EntityNode {
+private String name;
+private List<RelationEdge> relations;
 
-	public static void main(String[] args) {
+public EntityNode(String name) {
+this.name = name;
+this.relations = new ArrayList<>();
+}
 
-		
-	}
+public String getName() {
+return name;
+}
 
+public List<RelationEdge> getRelations() {
+return relations;
+}
+
+public void addRelation(RelationEdge edge) {
+relations.add(edge);
+}
+
+@Override
+public String toString() {
+return name;
+}
 }
