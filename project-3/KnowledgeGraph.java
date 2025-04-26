@@ -1,99 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
-public class EntityNode {
-private String name;
-private List<RelationEdge> relations;
-Expand
-EntityNode.java
-1 KB
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.SingleGraph;
-
-public class GraphVisualizer {
-    public static void display(KnowledgeGraph knowledgeGraph) {
-        System.setProperty("org.graphstream.ui", "swing");
-Expand
-GraphVisualizer.java
-2 KB
-import org.apache.poi.ss.usermodel.*;
-import java.io.File;
-import java.util.*;
-
-public class KnowledgeGraph {
-    private Map<String, EntityNode> entities;
-Expand
-KnowledgeGraph.java
-3 KB
-import java.util.Scanner;
-
-public class KnowledgeGraphApp {
-    public static void main(String[] args) {
-        KnowledgeGraph graph = new KnowledgeGraph();
-        graph.buildGraph("Sample-dataset-project.xls");
-
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("\nKnowledge Graph Explorer");
-            System.out.println("1. List all relations for an entity");
-            System.out.println("2. List all entity pairs for a relation");
-            System.out.println("3. Navigate from entity via relation");
-            System.out.println("4. Visualize graph");
-            System.out.println("5. Exit");
-            System.out.print("Select an option: ");
-
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-
-            switch (choice) {
-                case 1:
-                    System.out.print("Enter entity name: ");
-                    String entity = scanner.nextLine();
-                    System.out.println("Relations: " + graph.getEntityRelations(entity));
-                    break;
-                case 2:
-                    System.out.print("Enter relation type: ");
-                    String relation = scanner.nextLine();
-                    graph.getRelationPairs(relation).forEach(pair ->
-                            System.out.println(pair[0] + " <-> " + pair[1]));
-                    break;
-                case 3:
-                    System.out.print("Enter starting entity: ");
-                    String startEntity = scanner.nextLine();
-                    System.out.print("Enter relation to follow: ");
-                    String followRelation = scanner.nextLine();
-                    String result = graph.navigate(startEntity, followRelation);
-                    System.out.println("Result: " + (result != null ? result : "No connection found"));
-                    break;
-                case 4:
-                    GraphVisualizer.display(graph);
-                    break;
-                case 5:
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid option");
-            }
-        }
-    }
-}
-Collapse
-KnowledgeGraphApp.java
-3 KB
-public class RelationEdge {
-    private String relationType;
-    private EntityNode source;
-    private EntityNode destination;
-
-    public RelationEdge(String relationType, EntityNode source, EntityNode destination) {
-Expand
-RelationEdge.java
-1 KB
-﻿
-teriyaki
-easyace.
- 
- 
- 
 import org.apache.poi.ss.usermodel.*;
 import java.io.File;
 import java.util.*;
@@ -132,3 +36,45 @@ public class KnowledgeGraph {
             System.err.println("Error reading Excel file: " + e.getMessage());
         }
     }
+
+    public List<String> getEntityRelations(String entityName) {
+        if (!entities.containsKey(entityName)) {
+            return Collections.emptyList();
+        }
+        return entities.get(entityName).getRelations().stream()
+                .map(RelationEdge::getRelationType)
+                .distinct()
+                .toList();
+    }
+
+    public List<String[]> getRelationPairs(String relationType) {
+        if (!relations.containsKey(relationType)) {
+            return Collections.emptyList();
+        }
+        return relations.get(relationType).stream()
+                .map(edge -> new String[]{edge.getSource().getName(), edge.getDestination().getName()})
+                .toList();
+    }
+
+    public String navigate(String entityName, String relationType) {
+        if (!entities.containsKey(entityName)) {
+            return null;
+        }
+
+        for (RelationEdge edge : entities.get(entityName).getRelations()) {
+            if (edge.getRelationType().equals(relationType)) {
+                return edge.getSource().getName().equals(entityName) ?
+                        edge.getDestination().getName() : edge.getSource().getName();
+            }
+        }
+        return null;
+    }
+
+    public Collection<EntityNode> getEntities() {
+        return entities.values();
+    }
+
+    public Collection<List<RelationEdge>> getRelations() {
+        return relations.values();
+    }
+}
